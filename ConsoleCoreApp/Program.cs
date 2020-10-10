@@ -14,7 +14,7 @@ namespace ConsoleCoreApp
     {
         static async Task Main(string[] args)
         {
-            const string teamSecret = ""; // Вставь сюда ключ команды
+            const string teamSecret = "gUMEt0Qm/FgKeVCaKEoWjk5acFvsjUOS"; // Вставь сюда ключ команды
             if (string.IsNullOrEmpty(teamSecret))
             {
                 Console.WriteLine("Задай секрет своей команды, чтобы можно было делать запросы от ее имени");
