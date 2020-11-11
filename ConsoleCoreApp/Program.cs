@@ -24,7 +24,7 @@ namespace ConsoleCoreApp
 
             const string challengeId = "projects-course";
             Console.WriteLine($"Нажми ВВОД, чтобы получить информацию о соревновании {challengeId}");
-            Console.ReadLine();
+
             Console.WriteLine("Ожидание...");
             var challenge = await challengeClient.GetChallengeAsync(challengeId);
             Console.WriteLine(challenge.Description);
@@ -32,7 +32,7 @@ namespace ConsoleCoreApp
             Console.WriteLine("----------------");
             Console.WriteLine();
 
-            const string taskType = "starter";
+            string taskType = "";
 
             var utcNow = DateTime.UtcNow;
             string currentRound = null;
@@ -43,7 +43,7 @@ namespace ConsoleCoreApp
             }
 
             Console.WriteLine($"Нажми ВВОД, чтобы получить первые 50 взятых командой задач типа {taskType} в раунде {currentRound}");
-            Console.ReadLine();
+
             Console.WriteLine("Ожидание...");
             var firstTasks = await challengeClient.GetTasksAsync(currentRound, taskType, TaskStatus.Pending, 0, 50);
             for (int i = 0; i < firstTasks.Count; i++)
@@ -57,37 +57,83 @@ namespace ConsoleCoreApp
             Console.WriteLine("----------------");
             Console.WriteLine();
 
-            Console.WriteLine($"Нажми ВВОД, чтобы получить задачу типа {taskType} в раунде {currentRound}");
-            Console.ReadLine();
-            Console.WriteLine("Ожидание...");
-            var newTask = await challengeClient.AskNewTaskAsync(currentRound, taskType);
-            Console.WriteLine($"  Новое задание, статус {newTask.Status}");
-            Console.WriteLine($"  Формулировка: {newTask.UserHint}");
-            Console.WriteLine($"                {newTask.Question}");
-            Console.WriteLine();
-            Console.WriteLine("----------------");
-            Console.WriteLine();
+            for (int j = 0; j < 600; ++j)
+            {
+                /*Console.WriteLine($"Нажми ВВОД, чтобы получить задачу типа {taskType} в раунде {currentRound}");
 
-            const string answer = "42";
-            Console.WriteLine($"Нажми ВВОД, чтобы ответить на полученную задачу самым правильным ответом: {answer}");
-            Console.ReadLine();
-            Console.WriteLine("Ожидание...");
-            var updatedTask = await challengeClient.CheckTaskAnswerAsync(newTask.Id, answer);
-            Console.WriteLine($"  Новое задание, статус {updatedTask.Status}");
-            Console.WriteLine($"  Формулировка:  {updatedTask.UserHint}");
-            Console.WriteLine($"                 {updatedTask.Question}");
-            Console.WriteLine($"  Ответ команды: {updatedTask.TeamAnswer}");
-            Console.WriteLine();
-            if (updatedTask.Status == TaskStatus.Success)
-                Console.WriteLine($"Ура! Ответ угадан!");
-            else if (updatedTask.Status == TaskStatus.Failed)
-                Console.WriteLine($"Похоже ответ не подошел и задачу больше сдать нельзя...");
+                Console.WriteLine("Ожидание...");*/
+                var newTask = await challengeClient.AskNewTaskAsync(currentRound, taskType);
+                /* Console.WriteLine($"  Новое задание, статус {newTask.Status}");
+                 Console.WriteLine($"  Формулировка: {newTask.UserHint}");
+                 Console.WriteLine($"                {newTask.Question}");
+                 Console.WriteLine();
+                 Console.WriteLine("----------------");
+                 Console.WriteLine();*/
+
+                string type = newTask.TypeId;
+                string answer = "";
+
+                if (type == "math")
+                {
+                    answer = MySolutions.SloveMath(newTask.Question);
+                }
+                else
+                    if (type == "determinant")
+                {
+                    answer = MySolutions.Determinant(newTask.Question);
+                }
+                else
+                    if (type == "polynomial-root")
+                {
+                    continue;
+                    //answer = MyPrograms.Polynomial_root(type);
+                }
+                else
+                    if (type == "moment")
+                {
+                    answer = MySolutions.Moment(newTask.Question);
+                }
+                else
+                    if (type == "cypher")
+                {
+                    continue;
+                    //answer = MyPrograms.Cypher(newTask.Question);
+                }
+                else
+                    if (type == "shape")
+                {
+                    answer = MySolutions.Shape(newTask.Question);
+                }
+                if (type == "statistics")
+                {
+                    answer = MySolutions.Statistics(newTask.Question);
+                }
+
+                if (answer == "KEKS")
+                    continue;
+                /* Console.WriteLine($"Нажми ВВОД, чтобы ответить на полученную задачу самым правильным ответом: {answer}");
+
+             Console.WriteLine("Ожидание...");*/
+                var updatedTask = await challengeClient.CheckTaskAnswerAsync(newTask.Id, answer);
+                /*Console.WriteLine($"  Новое задание, статус {updatedTask.Status}");
+                Console.WriteLine($"  Формулировка:  {updatedTask.UserHint}");
+                Console.WriteLine($"                 {updatedTask.Question}");
+                Console.WriteLine($"  Ответ команды: {updatedTask.TeamAnswer}");
+                Console.WriteLine();*/
+                 if (updatedTask.Status == TaskStatus.Success)
+                     Console.WriteLine($"Ура! Ответ угадан!");
+                 else if (updatedTask.Status == TaskStatus.Failed)
+                 {
+                     Console.WriteLine($"Похоже ответ не подошел и задачу больше сдать нельзя...");
+                     throw new Exception("Задача не правильна решена");
+                 }
+            }
             Console.WriteLine();
             Console.WriteLine("----------------");
             Console.WriteLine();
 
             Console.WriteLine($"Нажми ВВОД, чтобы завершить работу программы");
-            Console.ReadLine();
+
         }
     }
 }
